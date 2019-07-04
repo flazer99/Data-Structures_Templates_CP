@@ -1,0 +1,265 @@
+import java.util.*;
+public class TreeTestLL {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		IBinaryTree<Integer> btree1 = new BinaryTree<Integer>();
+		
+		Integer[] testlist = new Integer[16];
+		testlist[0]=null;
+		for (int i=1;i<16;i++){
+			
+		if( i==6 || i==7)
+				testlist[i]=null;
+			else
+			  testlist[i]=i;
+		}
+		testlist[7]=null;
+		for (int i=10;i<16;i++){
+			testlist[i]=null;
+		}
+		btree1.constructTree(testlist);
+		btree1.printTree();
+		Node<Integer> node = (Node<Integer>) btree1.getNode(1);
+		System.out.println("Depth: " + btree1.getDepth(node));
+		System.out.println("Height: "+btree1.getHeight(node));
+		
+
+	}
+
+}
+
+
+class Node<E> {
+	private E element; 
+	private Node<E> parent;
+	private Node<E> leftchild;
+	private Node<E> rightchild;
+	public Node(){
+		element = null;
+		parent = null;
+		leftchild = null;
+		rightchild = null;
+	}
+	public Node(E e, Node curparent)
+	{
+		element = e;
+		parent = curparent;
+	}
+	public E getElement(){
+		return element;
+	}
+	public Node<E> getParent(){
+		return parent;
+	}
+	public Node<E> getlChild(){
+		return leftchild;
+	}
+	public Node<E> getrChild(){
+		return rightchild;
+	}
+	public void setElement(E e){
+		element = e;
+	}
+	public void setParent(Node<E> parent1){
+		parent = parent1;
+		
+	}
+	public void setLeft(Node<E> lchild){
+		leftchild = lchild;
+		leftchild.setParent(this);
+	}
+	public void setRight(Node<E> rchild){
+		rightchild = rchild;
+		rightchild.setParent(this);
+	}
+	public boolean isInternal(){
+		return (leftchild!=null||rightchild!=null);
+	}
+	public boolean isExternal(){
+		return (leftchild==null && rightchild ==null);
+	}
+	public boolean isRoot(){
+		return (parent == null);
+	}
+}
+
+interface IBinaryTree<E> {
+	int size();
+	boolean isEmpty();
+	Object getRoot();
+	void setRoot(Node<E> node);
+	Object getNode(int pos);
+	Object findNode(E val);
+	void insertChild(Node<E> curnode, E elt, char type);
+	void constructTree(E[] eltArray);
+	void printTree();
+	void inorderTraverse(Node<E> node);
+	void preorderTraverse(Node<E> node);
+	void postorderTraverse(Node<E> node);
+	void levelorderTraverse(Node<E> node);
+	int getDepth(Node<E> node);
+	int getHeight(Node<E> node);
+	boolean isProper(); //this method checks if the given tree is Proper or not
+	boolean proper() ; //recursive implementation of isproper
+	void printExternal(); //it prints all the external nodes of a tree
+}
+
+
+class BinaryTree<E> implements IBinaryTree<E>{
+
+	private Node<E> root;
+	private int sz;
+	private Node<E> nodelist[] = new Node[20];
+	public BinaryTree(){
+		root = null;
+		sz=0;
+	}
+	
+	
+	public Node<E> getRoot() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setRoot(Node<E> node) {
+		// TODO Auto-generated method stub
+	
+	}
+	
+	public Node<E> findNode(E val){
+		return null;
+	}
+	
+	public Node<E> getNode(int pos){
+		return nodelist[pos];
+	}
+	//inserts a node whose value is elt as a child of curnode
+	
+	public void insertChild(Node<E> curnode, E elt, char type) {
+		// TODO Auto-generated method stub
+		Node<E> newnode = new Node<E>(elt,null);
+		if(type=='l')
+		  curnode.setLeft(newnode);
+		else if(type=='r')
+			curnode.setRight(newnode);
+
+	}
+
+	public void constructTree(E[] eltArray) {
+		// TODO Auto-generated method stub
+		Node<E> newnode = new Node<E>(eltArray[1],null);
+		root = newnode;
+		nodelist[0]=null;
+		nodelist[1]=root; //array reprsentation
+		for (int i=2; i<eltArray.length;i++){
+			if (eltArray[i]!=null & nodelist[i/2]!=null){
+				 if(i%2==0){
+					System.out.println(nodelist[i/2].getElement());
+					insertChild(nodelist[i/2],eltArray[i],'l');
+					nodelist[i]=nodelist[i/2].getlChild();
+				}
+				else{
+					insertChild(nodelist[i/2],eltArray[i],'r');
+					nodelist[i]=nodelist[i/2].getrChild();
+				}
+			}
+			else nodelist[i]=null;
+		}
+	}
+
+	public void printTree() {
+		// TODO Auto-generated method stub
+		for (int i=0;i<nodelist.length;i++)
+		{
+			if (nodelist[i]!=null){
+				System.out.println("Elt"+nodelist[i].getElement() + "Pos"+i);
+			}
+			else System.out.println("Null");
+		}
+		
+	}
+
+	public void inorderTraverse(Node<E> node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void preorderTraverse(Node<E> node) {
+		// TODO Auto-generated method stub
+		
+		
+	}
+
+	public void postorderTraverse(Node<E> node) {
+		// TODO Auto-generated method stub
+	
+	}
+
+	public void levelorderTraverse(Node<E> node) {
+		// TODO Use the queue to do the traversal. You can also use the inbuilt Queue
+	
+		
+	}
+
+	public int getDepth(Node<E> node) {
+		// TODO Auto-generated method stub
+		int d=0;
+		while(node.getParent()!=null)
+		{
+			node = node.getParent();
+			d++;
+		}
+		return d;
+	
+		
+	}
+
+	public int getHeight(Node<E> node) {
+		// TODO Auto-generated method stub
+		if(node.isExternal())
+			return 0;
+		else
+			if((node.getlChild()!=null)&&(node.getrChild()!=null))
+			{
+				if(getHeight(node.getlChild())>getHeight(node.getrChild()))
+				return 1+getHeight(node.getlChild());
+			else
+				return 1+getHeight(node.getrChild());
+			}
+			else return 0;
+	}
+
+	public int size() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+	
+	}
+
+
+	public boolean isProper() {
+		// TODO Auto-generated method stub
+	
+	}
+
+
+	public boolean proper() {
+	  
+		
+	}
+	
+	public void printExternal() {
+		// TODO Auto-generated method stub
+		// TODO Use the queue to do the traversal. You can also use the inbuilt Queue
+		
+		
+	}
+
+	
+
+}
+
